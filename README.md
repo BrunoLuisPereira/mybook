@@ -1,6 +1,14 @@
 # mybook
 O mybook é um sistema pessoal para gerenciamento de leituras. O usuário pode cadastrar livros, registrar o tempo de leitura, dar notas e avaliações e acompanhar estatísticas sobre seu hábito de leitura.
 
+Frontend
+Next.js (React Framework) – Para um frontend otimizado e com suporte a SSR.
+TailwindCSS / Styled Components – Para estilização da interface.
+Backend
+Node.js + Express – Para criar a API do chat.
+MYSQL 
+JWT (JSON Web Token) – Para autenticação segura dos usuários.
+
 Cadastro e Autenticação de Usuários
 RF001: O sistema deve permitir que usuários se cadastrem informando nome, e-mail e senha.
 RF002: O sistema deve permitir que usuários façam login utilizando e-mail e senha.
