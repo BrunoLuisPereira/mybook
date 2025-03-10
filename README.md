@@ -42,3 +42,29 @@ RNF009: O projeto deve estar versionado no GitHub/GitLab e utilizar CI/CD para d
 RNF010: O código deve seguir a arquitetura MVC (Model-View-Controller).
 RNF011: O código deve ser documentado e conter um README detalhado com instruções de uso.
 RNF012: O sistema deve incluir testes unitários e de integração para garantir estabilidade.
+
+Estratégias de Desenvolvimento e Arquitetura
+🛠️ Estratégias de Desenvolvimento
+Para garantir uma construção eficiente e escalável do MyBook, adotamos as seguintes estratégias de desenvolvimento:
+✅ Desenvolvimento Ágil (Scrum/Kanban) – Aplicação de metodologias ágeis para iterar rapidamente sobre funcionalidades, com entregas contínuas e feedback dos usuários.
+✅ Versionamento com Git e GitHub – Controle de versões e colaboração eficiente entre os desenvolvedores.
+✅ Code Review e Boas Práticas – Padrões de código bem definidos para garantir qualidade e facilidade de manutenção.
+✅ Testes Unitários e de Integração – Utilização de testes automatizados para evitar falhas e garantir a confiabilidade do sistema.
+🏗️ Arquitetura do Sistema
+O MyBook será desenvolvido utilizando uma arquitetura monolítica.
+🔹 Justificativa da Arquitetura Monolítica:
+A escolha da arquitetura monolítica se deve ao fato de que o sistema possui escopo pessoal e não demanda alta escalabilidade no momento. Entre os benefícios dessa abordagem estão:
+•	Facilidade de Desenvolvimento – O código-fonte será centralizado em uma única base, facilitando a implementação e manutenção inicial.
+•	Menor Complexidade – Evita a necessidade de comunicação entre múltiplos serviços, reduzindo a sobrecarga operacional.
+•	Desempenho Direto – Como não há comunicação entre diversos serviços independentes, a latência da aplicação será reduzida.
+
+
+Tecnologias Escolhidas e Justificativa
+Tecnologia	Justificativa
+Next.js (React Framework)	Suporte a Server-Side Rendering (SSR) para melhor performance e SEO, além de ser altamente modular e escalável.
+TailwindCSS / Styled Components	Permitem estilização eficiente, reduzindo código CSS redundante e melhorando a organização da interface.
+Node.js + Express	Framework rápido e leve para criação de APIs, com ampla comunidade e compatibilidade com diversas ferramentas.
+MySQL	Banco de dados relacional confiável, garantindo integridade dos dados e suporte a consultas complexas.
+JWT (JSON Web Token)	Proporciona autenticação segura e sem necessidade de armazenar sessões no servidor, facilitando escalabilidade.
+
+
