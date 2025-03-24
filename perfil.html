@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Perfil</title>
+  
+  <link
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css"
+    rel="stylesheet"
+  >
+</head>
+<body class="bg-gray-200 min-h-screen flex items-center justify-center">
+  
+  <div class="bg-gray-900 p-6 rounded-md w-full max-w-4xl">
+    
+    <div class="flex items-center text-white mb-4">
+      
+      <button
+        onclick="window.location.href='menu.html'"
+        class="mr-4 text-2xl"
+      >
+        &larr;
+      </button>
+      <h1 class="text-xl font-semibold">Perfil</h1>
+    </div>
+
+   
+    <div class="bg-white p-6 rounded-md">
+      <form>
+        
+        <label class="block mb-2 text-gray-700">Name</label>
+        <input
+          type="text"
+          placeholder="Digite seu nome"
+          class="block w-full mb-4 p-2 border border-gray-300 rounded
+                 focus:outline-none focus:border-red-500"
+        />
+
+        
+        <label class="block mb-2 text-gray-700">E-mail</label>
+        <input
+          type="email"
+          placeholder="Digite seu e-mail"
+          class="block w-full mb-4 p-2 border border-gray-300 rounded
+                 focus:outline-none focus:border-red-500"
+        />
+
+        
+        <label class="block mb-2 text-gray-700">CPF</label>
+        <input
+          type="text"
+          placeholder="Digite seu CPF"
+          class="block w-full mb-4 p-2 border border-gray-300 rounded
+                 focus:outline-none focus:border-red-500"
+        />
+
+        
+        <label class="block mb-2 text-gray-700">Date of Birth</label>
+        <input
+          type="date"
+          class="block w-full mb-4 p-2 border border-gray-300 rounded
+                 focus:outline-none focus:border-red-500"
+        />
+
+       
+        <button
+          type="submit"
+          class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
+        >
+          Update
+        </button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
