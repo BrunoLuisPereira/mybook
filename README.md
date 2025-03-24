@@ -1,6 +1,7 @@
 # mybook
 O mybook é um sistema pessoal para gerenciamento de leituras. O usuário pode cadastrar livros, registrar o tempo de leitura, dar notas e avaliações e acompanhar estatísticas sobre seu hábito de leitura.
-
+## Protótipo no Figma 🎨  
+Acesse o design do projeto no Figma pelo link abaixo: https://www.figma.com/design/BDSnel4PFzhNcMDsGMtRt0/MYBOOK?node-id=0-1&p=f&t=ExbOUSqN78ef5g5a-0
 Frontend
 Next.js (React Framework) – Para um frontend otimizado e com suporte a SSR.
 TailwindCSS / Styled Components – Para estilização da interface.
