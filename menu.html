@@ -1,51 +1,87 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MyBook - Menu</title>
-  
+
+  <!-- Tailwind CSS -->
   <link
     href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css"
     rel="stylesheet"
   >
+  <style>
+    body {
+      background-color: #a3a3a3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+    }
+    .container {
+      background-color: #e5e5e5;
+      padding: 16px;
+      width: 320px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .menu-option {
+      background-color: #ffffff;
+      padding: 8px;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .menu-option a {
+      text-decoration: none;
+      color: #000;
+    }
+    .top-link {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+    }
+  </style>
 </head>
-<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
-  <div class="bg-gray-800 w-full max-w-md p-8 rounded-md shadow-lg text-center">
-    <h1 class="text-white text-4xl mb-8">MENU</h1>
+<body>
 
-    <ul class="list-none space-y-6 mb-8">
-      <li>
-        <a href="meuslivros.html" class="text-white text-2xl hover:text-gray-300 visited:text-white">
-          MEUS LIVROS
-        </a>
-      </li>
-      <li>
-        <a href="listadesejos.html" class="text-white text-2xl hover:text-gray-300 visited:text-white">
-          LISTA DE DESEJOS
-        </a>
-      </li>
-      <li>
-        
-        <a href="perfil.html" class="text-white text-2xl hover:text-gray-300 visited:text-white">
-          PERFIL
-        </a>
-      </li>
-    </ul>
+  <div class="container">
 
-    <button
-      class="bg-red-600 text-white py-2 px-6 rounded-md hover:bg-red-700 transition-colors"
-      onclick="logout()"
-    >
-      Logout
-    </button>
+    <!-- Acesso ao perfil -->
+    <div class="top-link">
+      <a href="perfil.html" class="text-xs text-red-600 hover:text-red-800 font-semibold underline">
+        Acessar Perfil
+      </a>
+    </div>
+
+    <!-- Boas-vindas -->
+    <div class="mb-6 mt-4">
+      <p class="text-sm font-semibold">Bem-vindo</p>
+      <p class="text-base font-bold">Nome da pessoa logada</p>
+    </div>
+
+    <!-- Menu principal -->
+    <div class="text-sm">
+      <div class="menu-option">
+        <a href="meuslivros.html">Minha Biblioteca</a>
+      </div>
+      <div class="menu-option">
+        <a href="toplivros.html">Top 10 Livros lidos</a>
+      </div>
+      <div class="menu-option">
+        <a href="tempodeleitura.html">Tempo de leitura</a>
+      </div>
+      <div class="menu-option">
+        <a href="listadesejos.html">Lista de Desejos</a>
+      </div>
+    </div>
+
   </div>
 
-  
-  <script>
-    function logout() {
-      
-      alert("Logout realizado!");
-    }
-  </script>
 </body>
 </html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lista de Desejos</title>
+
+  
+  <link
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css"
+    rel="stylesheet"
+  >
+  <style>
+    body {
+      background-color: #a3a3a3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+    }
+
+    .container {
+      background-color: #e5e5e5;
+      padding: 16px;
+      width: 320px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .voltar-link {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      font-size: 20px;
+      color: #dc2626;
+      text-decoration: none;
+    }
+
+    .badge {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .alta {
+      background-color: #dc2626;
+      color: white;
+    }
+
+    .media {
+      background-color: #f59e0b;
+      color: white;
+    }
+
+    .baixa {
+      background-color: #16a34a;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    
+    <a href="menu.html" class="voltar-link">&#8592;</a>
+
+ 
+    <h1 class="text-xl font-bold mb-4 text-center mt-4">📝 Lista de Desejos</h1>
+
+   
+    <form id="formDesejo" class="mb-4">
+      <input id="livro" type="text" placeholder="Nome do livro" class="w-full mb-2 px-2 py-1 text-sm rounded border border-gray-400" required />
+
+      <select id="prioridade" class="w-full mb-2 px-2 py-1 text-sm rounded border border-gray-400" required>
+        <option value="">Selecione a prioridade</option>
+        <option value="alta">Alta</option>
+        <option value="media">Média</option>
+        <option value="baixa">Baixa</option>
+      </select>
+
+      <button type="submit" class="w-full bg-white border border-gray-600 text-sm py-1 rounded hover:bg-gray-100">Adicionar</button>
+    </form>
+
+    
+    <div id="listaDesejos" class="text-sm space-y-3">
+      
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('formDesejo');
+    const lista = document.getElementById('listaDesejos');
+
+    function salvarDesejo(desejo) {
+      const desejos = JSON.parse(localStorage.getItem('desejos')) || [];
+      desejos.push(desejo);
+      localStorage.setItem('desejos', JSON.stringify(desejos));
+    }
+
+    function carregarDesejos() {
+      lista.innerHTML = '';
+      const desejos = JSON.parse(localStorage.getItem('desejos')) || [];
+
+      desejos.forEach(desejo => {
+        const div = document.createElement('div');
+        div.classList.add('bg-white', 'rounded', 'p-2', 'shadow-sm');
+
+        let prioridadeClasse = '';
+        let prioridadeTexto = '';
+
+        if (desejo.prioridade === 'alta') {
+          prioridadeClasse = 'alta';
+          prioridadeTexto = 'Alta';
+        } else if (desejo.prioridade === 'media') {
+          prioridadeClasse = 'media';
+          prioridadeTexto = 'Média';
+        } else {
+          prioridadeClasse = 'baixa';
+          prioridadeTexto = 'Baixa';
+        }
+
+        div.innerHTML = `
+          <p class="font-bold">${desejo.livro}</p>
+          <span class="badge ${prioridadeClasse}">Prioridade: ${prioridadeTexto}</span>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const livro = document.getElementById('livro').value.trim();
+      const prioridade = document.getElementById('prioridade').value;
+
+      if (livro && prioridade) {
+        const novoDesejo = { livro, prioridade };
+        salvarDesejo(novoDesejo);
+        form.reset();
+        carregarDesejos();
+      } else {
+        alert('Preencha todos os campos!');
+      }
+    });
+
+    window.onload = carregarDesejos;
+  </script>
+
+</body>
+</html>
