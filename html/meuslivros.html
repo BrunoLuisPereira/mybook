@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Biblioteca - MyBook</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #000;
+      margin: 0;
+      min-height: 100vh;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .background-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 0;
+    }
+
+    .background-image {
+      background: url('IMG/mybook.png') no-repeat center center;
+      background-size: cover;
+      width: 100%;
+      height: 100%;
+      filter: brightness(0.4) blur(1px);
+      border-radius: 80px;
+      max-width: 500px;
+      min-height: 90vh;
+      box-shadow: 0 0 30px rgba(255,255,255,0.1);
+    }
+
+    .popup-overlay {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 500px;
+      min-height: 90vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 80px;
+      overflow: hidden;
+      padding: 0 20px;
+    }
+
+    .popup-content {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px 20px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .voltar {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      color: red;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      border-radius: 8px;
+      border: none;
+      width: 100%;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .star {
+      font-size: 30px;
+      color: gray;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .star.selected {
+      color: gold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="background-container">
+  <div class="background-image"></div>
+</div>
+
+<div class="popup-overlay">
+  <div class="popup-content">
+
+    <div class="voltar" onclick="voltarMenu()">Voltar</div>
+
+    <h1 class="text-2xl font-bold mb-6 mt-2">📚 Minha Biblioteca</h1>
+
+    <form id="formLivro" class="w-full text-left">
+      <div>
+        <label class="block font-semibold mb-1">Título do Livro:</label>
+        <input id="titulo" type="text" placeholder="Digite o título" required>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Autor:</label>
+        <input id="autor" type="text" placeholder="Nome do autor" required>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Nota:</label>
+        <div class="flex space-x-2 mb-2" id="estrelas">
+          <span class="star" data-valor="1">&#9733;</span>
+          <span class="star" data-valor="2">&#9733;</span>
+          <span class="star" data-valor="3">&#9733;</span>
+          <span class="star" data-valor="4">&#9733;</span>
+          <span class="star" data-valor="5">&#9733;</span>
+        </div>
+      </div>
+
+      <button type="submit">Adicionar Livro</button>
+    </form>
+
+    <h2 class="text-xl font-bold mt-6 mb-4">Meus Livros</h2>
+
+    <div id="listaLivros" class="w-full space-y-4"></div>
+
+  </div>
+</div>
+
+<script>
+  function voltarMenu() {
+    window.location.href = "menu.html";
+  }
+
+  let notaSelecionada = 0;
+  const estrelas = document.querySelectorAll('.star');
+
+  estrelas.forEach(estrela => {
+    estrela.addEventListener('click', () => {
+      notaSelecionada = parseInt(estrela.dataset.valor);
+      atualizarEstrelas(notaSelecionada);
+    });
+  });
+
+  function atualizarEstrelas(valor) {
+    estrelas.forEach(estrela => {
+      estrela.classList.toggle('selected', parseInt(estrela.dataset.valor) <= valor);
+    });
+  }
+
+  const form = document.getElementById('formLivro');
+  const lista = document.getElementById('listaLivros');
+
+  function salvarLivro(livro) {
+    const livros = JSON.parse(localStorage.getItem('livros')) || [];
+    livros.push(livro);
+    localStorage.setItem('livros', JSON.stringify(livros));
+  }
+
+  function carregarLivros() {
+    lista.innerHTML = '';
+    const livros = JSON.parse(localStorage.getItem('livros')) || [];
+
+    livros.forEach(livro => {
+      const div = document.createElement('div');
+      div.classList.add('bg-gray-50', 'p-4', 'rounded-lg', 'shadow');
+
+      const estrelasHTML = '★'.repeat(livro.nota) + '☆'.repeat(5 - livro.nota);
+
+      div.innerHTML = `
+        <p class="text-lg font-semibold">${livro.titulo}</p>
+        <p class="text-sm text-gray-700">Autor: ${livro.autor}</p>
+        <p class="text-yellow-500 text-lg">${estrelasHTML}</p>
+      `;
+      lista.appendChild(div);
+    });
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const titulo = document.getElementById('titulo').value.trim();
+    const autor = document.getElementById('autor').value.trim();
+
+    if (titulo && autor && notaSelecionada > 0) {
+      const novoLivro = { titulo, autor, nota: notaSelecionada };
+      salvarLivro(novoLivro);
+      form.reset();
+      notaSelecionada = 0;
+      atualizarEstrelas(0);
+      carregarLivros();
+    } else {
+      alert('Preencha todos os campos e selecione uma nota!');
+    }
+  });
+
+  window.onload = carregarLivros;
+</script>
+
+</body>
+</html>

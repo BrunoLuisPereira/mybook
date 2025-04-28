@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyBook - Menu</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .background-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 0;
+    }
+
+    .background-image {
+      background: url('IMG/mybook.png') no-repeat center center;
+      background-size: cover;
+      width: 100%;
+      height: 100%;
+      filter: brightness(0.4) blur(1px);
+      border-radius: 80px;
+      max-width: 500px;
+      min-height: 90vh;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    }
+
+    .menu-overlay {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 500px;
+      min-height: 90vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 80px;
+      overflow: hidden;
+      padding: 0 20px;
+    }
+
+    .menu-content {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px 20px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .top-link {
+      width: 100%;
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    .top-link a {
+      font-size: 12px;
+      font-weight: 600;
+      color: #dc2626;
+      text-decoration: underline;
+    }
+
+    .user-info {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    .user-info p:first-child {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .user-info p:last-child {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .menu-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 20px;
+      gap: 16px;
+    }
+
+    .imagem-quadrado {
+      width: 90px;
+      height: 70px;
+      border-radius: 16px;
+      border: 3px solid black;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .imagem-quadrado img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .menu-button {
+      background-color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      text-decoration: none;
+      color: #000;
+      white-space: nowrap;
+      flex-grow: 1;
+    }
+
+    .menu-button:hover {
+      background-color: #d4d4d8;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="background-container">
+  <div class="background-image"></div>
+</div>
+
+<div class="menu-overlay">
+  <div class="menu-content">
+    
+    <div class="top-link">
+      <a href="perfil.html">Perfil</a>
+    </div>
+
+    <div class="user-info">
+      <p>Bem-vindo</p>
+      <p id="nomeUsuario">Nome da pessoa logada</p>
+    </div>
+
+    <div class="w-full flex flex-col items-center">
+
+      <div class="menu-item">
+        <div class="imagem-quadrado">
+          <img src="IMG/biblioteca.png" alt="Minha Biblioteca">
+        </div>
+        <a href="meuslivros.html" class="menu-button">Minha Biblioteca</a>
+      </div>
+
+      <div class="menu-item">
+        <div class="imagem-quadrado">
+          <img src="IMG/top10.png" alt="Top 10 Livros Lidos">
+        </div>
+        <a href="toplivros.html" class="menu-button">Top 10 Livros Lidos</a>
+      </div>
+
+      <div class="menu-item">
+        <div class="imagem-quadrado">
+          <img src="IMG/tempo.png" alt="Tempo de Leitura">
+        </div>
+        <a href="tempodeleitura.html" class="menu-button">Tempo de Leitura</a>
+      </div>
+
+      <div class="menu-item">
+        <div class="imagem-quadrado">
+          <img src="IMG/listadesejos.png" alt="Lista de Desejos">
+        </div>
+        <a href="listadesejos.html" class="menu-button">Lista de Desejos</a>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  window.onload = function() {
+    const emailLogado = localStorage.getItem('email');
+
+    if (!emailLogado) {
+      window.location.href = "./index.html";
+      return;
+    }
+
+    fetch('/api/buscar-usuario', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailLogado })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.nome) {
+        document.getElementById('nomeUsuario').innerText = data.nome;
+      } else {
+        document.getElementById('nomeUsuario').innerText = 'Usuário Desconhecido';
+      }
+    })
+    .catch(error => {
+      console.error('Erro ao buscar usuário:', error);
+      document.getElementById('nomeUsuario').innerText = 'Erro ao buscar usuário';
+    });
+  };
+</script>
+
+</body>
+</html>

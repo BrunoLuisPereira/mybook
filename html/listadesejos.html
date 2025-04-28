@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de Desejos - MyBook</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      margin: 0;
+      min-height: 100vh;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .background-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 0;
+    }
+
+    .background-image {
+      background: url('IMG/mybook.png') no-repeat center center;
+      background-size: cover;
+      width: 100%;
+      height: 100%;
+      filter: brightness(0.4) blur(1px);
+      border-radius: 80px;
+      max-width: 500px;
+      min-height: 90vh;
+      box-shadow: 0 0 30px rgba(255,255,255,0.1);
+    }
+
+    .popup-overlay {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 500px;
+      min-height: 90vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 80px;
+      overflow: hidden;
+      padding: 0 20px;
+    }
+
+    .popup-content {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px 20px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .voltar {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      color: red;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      border-radius: 8px;
+      border: none;
+      width: 100%;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .badge {
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .alta {
+      background-color: #dc2626;
+      color: white;
+    }
+
+    .media {
+      background-color: #f59e0b;
+      color: white;
+    }
+
+    .baixa {
+      background-color: #16a34a;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="background-container">
+  <div class="background-image"></div>
+</div>
+
+<div class="popup-overlay">
+  <div class="popup-content">
+
+    <div class="voltar" onclick="voltarMenu()">Voltar</div>
+
+    <h1 class="text-2xl font-bold mb-6 mt-2">📝 Lista de Desejos</h1>
+
+    <form id="formDesejo" class="w-full text-left">
+      <div>
+        <label class="block font-semibold mb-1">Nome do Livro:</label>
+        <input id="livro" type="text" placeholder="Digite o nome do livro" required>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Prioridade:</label>
+        <select id="prioridade" required>
+          <option value="">Selecione a prioridade</option>
+          <option value="alta">Alta</option>
+          <option value="media">Média</option>
+          <option value="baixa">Baixa</option>
+        </select>
+      </div>
+
+      <button type="submit">Adicionar</button>
+    </form>
+
+    <h2 class="text-xl font-bold mt-6 mb-4">Livros Desejados</h2>
+
+    <div id="listaDesejos" class="w-full space-y-4"></div>
+
+  </div>
+</div>
+
+<script>
+  function voltarMenu() {
+    window.location.href = "menu.html";
+  }
+
+  const form = document.getElementById('formDesejo');
+  const lista = document.getElementById('listaDesejos');
+
+  function salvarDesejo(desejo) {
+    const desejos = JSON.parse(localStorage.getItem('desejos')) || [];
+    desejos.push(desejo);
+    localStorage.setItem('desejos', JSON.stringify(desejos));
+  }
+
+  function carregarDesejos() {
+    lista.innerHTML = '';
+    const desejos = JSON.parse(localStorage.getItem('desejos')) || [];
+
+    desejos.forEach(desejo => {
+      const div = document.createElement('div');
+      div.classList.add('bg-gray-50', 'p-4', 'rounded-lg', 'shadow');
+
+      let prioridadeClasse = '';
+      let prioridadeTexto = '';
+
+      if (desejo.prioridade === 'alta') {
+        prioridadeClasse = 'alta';
+        prioridadeTexto = 'Alta';
+      } else if (desejo.prioridade === 'media') {
+        prioridadeClasse = 'media';
+        prioridadeTexto = 'Média';
+      } else {
+        prioridadeClasse = 'baixa';
+        prioridadeTexto = 'Baixa';
+      }
+
+      div.innerHTML = `
+        <p class="text-lg font-semibold">${desejo.livro}</p>
+        <span class="badge ${prioridadeClasse}">Prioridade: ${prioridadeTexto}</span>
+      `;
+      lista.appendChild(div);
+    });
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const livro = document.getElementById('livro').value.trim();
+    const prioridade = document.getElementById('prioridade').value;
+
+    if (livro && prioridade) {
+      const novoDesejo = { livro, prioridade };
+      salvarDesejo(novoDesejo);
+      form.reset();
+      carregarDesejos();
+    } else {
+      alert('Preencha todos os campos!');
+    }
+  });
+
+  window.onload = carregarDesejos;
+</script>
+
+</body>
+</html>

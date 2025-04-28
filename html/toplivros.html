@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top 10 Livros Lidos - MyBook</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      margin: 0;
+      min-height: 100vh;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .background-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 0;
+    }
+
+    .background-image {
+      background: url('IMG/mybook.png') no-repeat center center;
+      background-size: cover;
+      width: 100%;
+      height: 100%;
+      filter: brightness(0.4) blur(1px);
+      border-radius: 80px;
+      max-width: 500px;
+      min-height: 90vh;
+      box-shadow: 0 0 30px rgba(255,255,255,0.1);
+    }
+
+    .popup-overlay {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 500px;
+      min-height: 90vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 80px;
+      overflow: hidden;
+      padding: 0 20px;
+    }
+
+    .popup-content {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px 20px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .voltar {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      color: red;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .estrela {
+      font-size: 2rem;
+      color: gray;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .estrela.selected {
+      color: gold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      border-radius: 8px;
+      border: none;
+      width: 100%;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="background-container">
+  <div class="background-image"></div>
+</div>
+
+<div class="popup-overlay">
+  <div class="popup-content">
+
+    <div class="voltar" onclick="voltarMenu()">Voltar</div>
+
+    <h1 class="text-2xl font-bold mb-6 mt-2">Top 10 Livros Lidos</h1>
+
+    <form id="livroForm" class="space-y-4 text-left w-full">
+      <div>
+        <label class="block font-semibold">Nome do Livro:</label>
+        <input type="text" id="nomeLivro" required>
+      </div>
+
+      <div>
+        <label class="block font-semibold">Nota (clique nas estrelas):</label>
+        <div id="avaliacaoEstrelas" class="flex space-x-2 mb-2">
+          <span class="estrela" data-valor="1">&#9733;</span>
+          <span class="estrela" data-valor="2">&#9733;</span>
+          <span class="estrela" data-valor="3">&#9733;</span>
+          <span class="estrela" data-valor="4">&#9733;</span>
+          <span class="estrela" data-valor="5">&#9733;</span>
+        </div>
+      </div>
+
+      <div>
+        <label class="block font-semibold">Comentário:</label>
+        <textarea id="comentario" rows="3" required></textarea>
+      </div>
+
+      <div>
+        <label class="block font-semibold">Data de Registro:</label>
+        <input type="date" id="dataRegistro" required>
+      </div>
+
+      <button type="submit">Adicionar</button>
+    </form>
+
+    <h2 class="text-xl font-bold mt-6 mb-2">Top 10 Avaliações</h2>
+    <div id="listaLivros" class="w-full space-y-4"></div>
+
+  </div>
+</div>
+
+<script>
+  function voltarMenu() {
+    window.location.href = "menu.html";
+  }
+
+  let notaSelecionada = 0;
+  const estrelas = document.querySelectorAll('.estrela');
+
+  estrelas.forEach(estrela => {
+    estrela.addEventListener('click', () => {
+      notaSelecionada = parseInt(estrela.dataset.valor);
+      atualizarEstrelas(notaSelecionada);
+    });
+  });
+
+  function atualizarEstrelas(valor) {
+    estrelas.forEach(estrela => {
+      estrela.classList.toggle('selected', parseInt(estrela.dataset.valor) <= valor);
+    });
+  }
+
+  const form = document.getElementById('livroForm');
+  const lista = document.getElementById('listaLivros');
+  let livros = [];
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const livro = {
+      nome: document.getElementById('nomeLivro').value,
+      nota: notaSelecionada,
+      comentario: document.getElementById('comentario').value,
+      data: document.getElementById('dataRegistro').value,
+    };
+
+    livros.push(livro);
+    livros.sort((a, b) => b.nota - a.nota);
+    livros = livros.slice(0, 10);
+
+    atualizarLista();
+    form.reset();
+    notaSelecionada = 0;
+    atualizarEstrelas(0);
+  });
+
+  function atualizarLista() {
+    listaLivros.innerHTML = '';
+    livros.forEach((livro, index) => {
+      const estrelasHTML = '⭐'.repeat(livro.nota) + '☆'.repeat(5 - livro.nota);
+      listaLivros.innerHTML += `
+        <div class="border p-4 rounded-lg bg-gray-50">
+          <h2 class="text-xl font-bold">${index + 1}º - ${livro.nome}</h2>
+          <p class="text-yellow-500 text-lg">${estrelasHTML}</p>
+          <p class="mt-2 text-gray-700"><strong>Comentário:</strong> ${livro.comentario}</p>
+          <p class="text-sm text-gray-500"><strong>Registrado em:</strong> ${livro.data}</p>
+        </div>
+      `;
+    });
+  }
+</script>
+
+</body>
+</html>
