@@ -1,11 +1,9 @@
-// db.js
-
 const mysql = require('mysql2/promise');
 
 const db = mysql.createPool({
   host: 'localhost',
-  user: 'root',
-  password: '',
+  user: 'root',           // ou outro usuário
+  password: '',           // coloque a senha se tiver
   database: 'mybook'
 });
 
