@@ -1,12 +1,11 @@
 // routes/leituraRoutes.js
-
 const express = require('express');
 const router = express.Router();
-const leituraController = require('../controllers/leituraController');
+const controller = require('../controllers/leituraController');
 
-router.post('/leituras', leituraController.adicionarLeitura);
-router.put('/leituras/inicio', leituraController.marcarInicio);
-router.put('/leituras/fim', leituraController.marcarFim);
-router.get('/leituras', leituraController.listarLeituras);
+router.post('/leituras', controller.adicionarLeitura);
+router.get('/leituras/:email', controller.listarLeituras);
+router.put('/leituras/inicio/:id', controller.marcarInicio);
+router.put('/leituras/fim/:id', controller.marcarFim);
 
 module.exports = router;

@@ -2,7 +2,7 @@
 
 const db = require('../db');
 
-// Adicionar avaliação
+// Adicionar nova avaliação
 exports.adicionarAvaliacao = async (req, res) => {
   const { email, nome, nota, comentario, data } = req.body;
 
@@ -18,9 +18,9 @@ exports.adicionarAvaliacao = async (req, res) => {
   }
 };
 
-// Listar avaliações do usuário
+// Listar avaliações de um usuário específico
 exports.listarAvaliacoesDoUsuario = async (req, res) => {
-  const { email } = req.query;
+  const { email } = req.params;
 
   try {
     const [avaliacoes] = await db.query(
@@ -29,17 +29,23 @@ exports.listarAvaliacoesDoUsuario = async (req, res) => {
     );
     res.json(avaliacoes);
   } catch (err) {
-    console.error('Erro ao buscar avaliações:', err);
+    console.error('Erro ao buscar avaliações do usuário:', err);
     res.status(500).json({ erro: 'Erro ao buscar avaliações.' });
   }
 };
 
-// Top 10 global (opcional)
+// Listar os Top 10 livros com melhores médias e contagem de avaliações
 exports.listarTop10Global = async (req, res) => {
   try {
-    const [top10] = await db.query(
-      'SELECT nome, AVG(nota) as mediaNota FROM avaliacoes GROUP BY nome ORDER BY mediaNota DESC LIMIT 10'
-    );
+    const [top10] = await db.query(`
+      SELECT nome, 
+             ROUND(AVG(nota), 1) AS media, 
+             COUNT(*) AS total
+      FROM avaliacoes
+      GROUP BY nome
+      ORDER BY media DESC
+      LIMIT 10
+    `);
     res.json(top10);
   } catch (err) {
     console.error('Erro ao buscar top 10 global:', err);

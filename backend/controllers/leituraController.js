@@ -18,41 +18,47 @@ exports.adicionarLeitura = async (req, res) => {
   }
 };
 
-// Atualizar data de início
+// Atualizar data de início (recebe data manualmente via body)
 exports.marcarInicio = async (req, res) => {
-  const { email, titulo, inicio } = req.body;
+  const { id } = req.params;
+  const { data } = req.body;
+
+  if (!data) return res.status(400).json({ erro: 'Data de início não fornecida.' });
 
   try {
     await db.query(
-      'UPDATE leituras SET inicio = ? WHERE email = ? AND titulo = ?',
-      [inicio, email, titulo]
+      'UPDATE leituras SET inicio = ? WHERE id = ?',
+      [data, id]
     );
-    res.json({ mensagem: 'Início registrado.' });
+    res.json({ mensagem: 'Início registrado com sucesso.' });
   } catch (err) {
     console.error('Erro ao registrar início:', err);
     res.status(500).json({ erro: 'Erro ao registrar início.' });
   }
 };
 
-// Atualizar data de fim
+// Atualizar data de fim (recebe data manualmente via body)
 exports.marcarFim = async (req, res) => {
-  const { email, titulo, fim } = req.body;
+  const { id } = req.params;
+  const { data } = req.body;
+
+  if (!data) return res.status(400).json({ erro: 'Data de término não fornecida.' });
 
   try {
     await db.query(
-      'UPDATE leituras SET fim = ? WHERE email = ? AND titulo = ?',
-      [fim, email, titulo]
+      'UPDATE leituras SET fim = ? WHERE id = ?',
+      [data, id]
     );
-    res.json({ mensagem: 'Fim registrado.' });
+    res.json({ mensagem: 'Término registrado com sucesso.' });
   } catch (err) {
-    console.error('Erro ao registrar fim:', err);
-    res.status(500).json({ erro: 'Erro ao registrar fim.' });
+    console.error('Erro ao registrar término:', err);
+    res.status(500).json({ erro: 'Erro ao registrar término.' });
   }
 };
 
 // Listar todas as leituras do usuário
 exports.listarLeituras = async (req, res) => {
-  const { email } = req.query;
+  const { email } = req.params;
 
   try {
     const [leituras] = await db.query('SELECT * FROM leituras WHERE email = ?', [email]);
