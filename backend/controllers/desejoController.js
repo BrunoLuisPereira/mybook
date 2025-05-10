@@ -18,6 +18,17 @@ exports.adicionarDesejo = async (req, res) => {
   }
 };
 
+exports.removerDesejo = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.query('DELETE FROM desejos WHERE id = ?', [id]);
+    res.json({ mensagem: 'Desejo excluído com sucesso.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ erro: 'Não foi possível excluir.' });
+  }
+  };
+
 // Listar desejos do usuário
 exports.listarDesejos = async (req, res) => {
   const { email } = req.query;

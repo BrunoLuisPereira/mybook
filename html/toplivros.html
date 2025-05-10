@@ -17,51 +17,32 @@
       position: relative;
       overflow: hidden;
     }
-
     .background-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; justify-content: center; align-items: center;
       z-index: 0;
     }
-
     .background-image {
       background: url('IMG/mybook.png') no-repeat center center;
       background-size: cover;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       filter: brightness(0.4) blur(1px);
       border-radius: 80px;
       max-width: 500px;
       min-height: 90vh;
       box-shadow: 0 0 30px rgba(255,255,255,0.1);
     }
-
     .popup-overlay {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 500px;
-      min-height: 90vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 80px;
-      overflow: hidden;
-      padding: 0 20px;
+      position: relative; z-index: 1;
+      width: 100%; max-width: 500px; min-height: 90vh;
+      display: flex; justify-content: center; align-items: center;
+      border-radius: 80px; overflow: hidden; padding: 0 20px;
     }
-
     .popup-content {
       background: rgba(255, 255, 255, 0.95);
       padding: 30px 20px;
       border-radius: 16px;
-      width: 90%;
-      max-width: 400px;
+      width: 90%; max-width: 400px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       text-align: center;
       display: flex;
@@ -69,7 +50,6 @@
       align-items: center;
       position: relative;
     }
-
     .voltar {
       position: absolute;
       top: 10px;
@@ -80,18 +60,15 @@
       text-decoration: underline;
       cursor: pointer;
     }
-
     .estrela {
       font-size: 2rem;
       color: gray;
       cursor: pointer;
       transition: color 0.2s;
     }
-
     .estrela.selected {
       color: gold;
     }
-
     input, textarea {
       width: 100%;
       padding: 10px;
@@ -100,7 +77,6 @@
       border: 1px solid #ccc;
       font-size: 14px;
     }
-
     button {
       background-color: #4CAF50;
       color: white;
@@ -113,7 +89,6 @@
       cursor: pointer;
       transition: background-color 0.3s;
     }
-
     button:hover {
       background-color: #45a049;
     }
@@ -121,14 +96,10 @@
 </head>
 
 <body>
-
-<div class="background-container">
-  <div class="background-image"></div>
-</div>
+<div class="background-container"><div class="background-image"></div></div>
 
 <div class="popup-overlay">
   <div class="popup-content">
-
     <div class="voltar" onclick="voltarMenu()">Voltar</div>
 
     <h1 class="text-2xl font-bold mb-6 mt-2">Top 10 Livros Lidos</h1>
@@ -163,9 +134,11 @@
       <button type="submit">Adicionar</button>
     </form>
 
-    <h2 class="text-xl font-bold mt-6 mb-2">Top 10 Avaliações</h2>
-    <div id="listaLivros" class="w-full space-y-4"></div>
+    <button onclick="carregarTop10()" class="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 font-bold">
+      Ver Top 10 Avaliações
+    </button>
 
+    <div id="listaLivros" class="w-full space-y-4 mt-4"></div>
   </div>
 </div>
 
@@ -192,43 +165,58 @@
 
   const form = document.getElementById('livroForm');
   const lista = document.getElementById('listaLivros');
-  let livros = [];
 
-  form.addEventListener('submit', function(event) {
+  form.addEventListener('submit', async function(event) {
     event.preventDefault();
+    const email = localStorage.getItem('email');
+    const nome = document.getElementById('nomeLivro').value;
+    const comentario = document.getElementById('comentario').value;
+    const data = document.getElementById('dataRegistro').value;
 
-    const livro = {
-      nome: document.getElementById('nomeLivro').value,
-      nota: notaSelecionada,
-      comentario: document.getElementById('comentario').value,
-      data: document.getElementById('dataRegistro').value,
-    };
+    if (!email || !nome || !notaSelecionada || !comentario || !data) {
+      alert("Preencha todos os campos corretamente.");
+      return;
+    }
 
-    livros.push(livro);
-    livros.sort((a, b) => b.nota - a.nota);
-    livros = livros.slice(0, 10);
+    try {
+      await fetch("http://localhost:3000/api/avaliacoes", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, nome, nota: notaSelecionada, comentario, data })
+      });
 
-    atualizarLista();
-    form.reset();
-    notaSelecionada = 0;
-    atualizarEstrelas(0);
+      form.reset();
+      notaSelecionada = 0;
+      atualizarEstrelas(0);
+      carregarTop10();
+    } catch (err) {
+      console.error("Erro ao salvar avaliação:", err);
+    }
   });
 
-  function atualizarLista() {
-    listaLivros.innerHTML = '';
-    livros.forEach((livro, index) => {
-      const estrelasHTML = '⭐'.repeat(livro.nota) + '☆'.repeat(5 - livro.nota);
-      listaLivros.innerHTML += `
-        <div class="border p-4 rounded-lg bg-gray-50">
-          <h2 class="text-xl font-bold">${index + 1}º - ${livro.nome}</h2>
-          <p class="text-yellow-500 text-lg">${estrelasHTML}</p>
-          <p class="mt-2 text-gray-700"><strong>Comentário:</strong> ${livro.comentario}</p>
-          <p class="text-sm text-gray-500"><strong>Registrado em:</strong> ${livro.data}</p>
-        </div>
-      `;
-    });
-  }
-</script>
+  async function carregarTop10() {
+    try {
+      const response = await fetch("http://localhost:3000/api/avaliacoes/top10");
+      const livros = await response.json();
+      console.log("Top 10 retornado:", livros);
 
+      lista.innerHTML = '';
+
+      livros.forEach((livro, index) => {
+        lista.innerHTML += `
+          <div class="border p-4 rounded-lg bg-gray-50">
+            <h2 class="text-xl font-bold">${index + 1}º - ${livro.nome}</h2>
+            <p class="text-yellow-500 text-lg">⭐ Média: ${parseFloat(livro.media).toFixed(1)} / 5</p>
+            <p class="text-sm text-gray-500">Total de avaliações: ${livro.total}</p>
+          </div>
+        `;
+      });
+    } catch (err) {
+      console.error("Erro ao carregar top 10:", err);
+    }
+  }
+
+  window.onload = carregarTop10;
+</script>
 </body>
 </html>

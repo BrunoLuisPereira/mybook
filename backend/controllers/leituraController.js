@@ -2,16 +2,20 @@
 
 const db = require('../db');
 
-// Adicionar nova leitura
+// Adicionar nova leitura (já recebe data de início e término)
 exports.adicionarLeitura = async (req, res) => {
-  const { email, titulo } = req.body;
+  const { email, titulo, inicio, fim } = req.body;
+
+  if (!email || !titulo || !inicio || !fim) {
+    return res.status(400).json({ erro: 'email, titulo, inicio e fim são obrigatórios.' });
+  }
 
   try {
     await db.query(
-      'INSERT INTO leituras (email, titulo) VALUES (?, ?)',
-      [email, titulo]
+      'INSERT INTO leituras (email, titulo, inicio, fim) VALUES (?, ?, ?, ?)',
+      [email, titulo, inicio, fim]
     );
-    res.json({ mensagem: 'Livro para leitura adicionado com sucesso.' });
+    res.json({ mensagem: 'Leitura adicionada com sucesso.' });
   } catch (err) {
     console.error('Erro ao adicionar leitura:', err);
     res.status(500).json({ erro: 'Erro ao adicionar leitura.' });
@@ -23,7 +27,9 @@ exports.marcarInicio = async (req, res) => {
   const { id } = req.params;
   const { data } = req.body;
 
-  if (!data) return res.status(400).json({ erro: 'Data de início não fornecida.' });
+  if (!data) {
+    return res.status(400).json({ erro: 'Data de início não fornecida.' });
+  }
 
   try {
     await db.query(
@@ -42,7 +48,9 @@ exports.marcarFim = async (req, res) => {
   const { id } = req.params;
   const { data } = req.body;
 
-  if (!data) return res.status(400).json({ erro: 'Data de término não fornecida.' });
+  if (!data) {
+    return res.status(400).json({ erro: 'Data de término não fornecida.' });
+  }
 
   try {
     await db.query(
@@ -60,8 +68,15 @@ exports.marcarFim = async (req, res) => {
 exports.listarLeituras = async (req, res) => {
   const { email } = req.params;
 
+  if (!email) {
+    return res.status(400).json({ erro: 'Email não fornecido.' });
+  }
+
   try {
-    const [leituras] = await db.query('SELECT * FROM leituras WHERE email = ?', [email]);
+    const [leituras] = await db.query(
+      'SELECT * FROM leituras WHERE email = ? ORDER BY id DESC',
+      [email]
+    );
     res.json(leituras);
   } catch (err) {
     console.error('Erro ao buscar leituras:', err);

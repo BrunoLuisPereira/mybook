@@ -147,7 +147,6 @@
     }
   </style>
 </head>
-
 <body>
 
 <div class="background-container">
@@ -156,14 +155,14 @@
 
 <div class="menu-overlay">
   <div class="menu-content">
-    
+
     <div class="top-link">
       <a href="perfil.html">Perfil</a>
     </div>
 
     <div class="user-info">
       <p>Bem-vindo</p>
-      <p id="nomeUsuario">Nome da pessoa logada</p>
+      <p id="nomeUsuario">Carregando...</p>
     </div>
 
     <div class="w-full flex flex-col items-center">
@@ -184,14 +183,14 @@
 
       <div class="menu-item">
         <div class="imagem-quadrado">
-          <img src="IMG/tempo.png" alt="Tempo de Leitura">
+          <img src="IMG/tempoleitura.png" alt="Tempo de Leitura">
         </div>
         <a href="tempodeleitura.html" class="menu-button">Tempo de Leitura</a>
       </div>
 
       <div class="menu-item">
         <div class="imagem-quadrado">
-          <img src="IMG/listadesejos.png" alt="Lista de Desejos">
+          <img src="IMG/desejos.png" alt="Lista de Desejos">
         </div>
         <a href="listadesejos.html" class="menu-button">Lista de Desejos</a>
       </div>
@@ -210,7 +209,7 @@
       return;
     }
 
-    fetch('/api/buscar-usuario', {
+    fetch('http://localhost:3000/api/buscar-usuario', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: emailLogado })

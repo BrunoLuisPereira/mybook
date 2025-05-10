@@ -68,9 +68,6 @@
       flex: 1;
       padding-right: 40px;
     }
-    .checkbox-inline {
-      flex-shrink: 0;
-    }
     .checkbox-inline input[type="checkbox"] {
       accent-color: orange;
       width: 20px;
@@ -85,40 +82,22 @@
       font-size: 14px;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s;
-    }
-    .login-button button:hover {
-      background-color: #f0f0f0;
     }
     .link {
-      margin-top: 4px;
       font-size: 12px;
       color: purple;
-      text-align: center;
-      text-decoration: none;
       cursor: pointer;
     }
-    .link:hover {
-      text-decoration: underline;
-    }
     .cadastrar-usuario {
-      margin-bottom: 10px;
       font-size: 14px;
       color: red;
       font-weight: bold;
-      text-decoration: none;
       cursor: pointer;
     }
-    .cadastrar-usuario:hover {
-      text-decoration: underline;
-    }
-    /* Popups */
     .popup-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0,0,0,0.7);
       display: none;
       justify-content: center;
@@ -131,49 +110,22 @@
       border-radius: 16px;
       width: 90%;
       max-width: 400px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.2);
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-    .popup input {
-      background-color: #fff;
-      border: 1px solid #ccc;
-      padding: 8px;
-      border-radius: 6px;
-      width: 100%;
-    }
-    .popup button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .popup button:hover {
-      background-color: #45a049;
-    }
-    .close-btn {
-      background-color: red;
-    }
   </style>
 </head>
-
 <body>
-
 <div class="background-cinza">
   <div class="image-container">
     <img src="IMG/mybook.png" alt="MyBook">
   </div>
-
   <div class="form-container">
     <div class="input-group">
       <label for="email">Usuário:</label>
       <input id="email" type="email" required>
     </div>
-
     <div class="input-group">
       <label for="senha">Senha:</label>
       <div class="senha-wrapper">
@@ -183,21 +135,17 @@
         </div>
       </div>
     </div>
-
-    <a href="#" class="link" onclick="abrirPopupEsqueciSenha()">Esqueci senha</a>
-
+    <a class="link" onclick="abrirPopupEsqueciSenha()">Esqueci senha</a>
     <div class="login-button">
       <button onclick="handleLogin(event)">Login</button>
     </div>
   </div>
-
   <a class="cadastrar-usuario" onclick="abrirPopupCadastro()">Cadastrar usuário</a>
 </div>
 
-
 <div class="popup-overlay" id="popupCadastro">
   <div class="popup">
-    <h2 class="text-lg font-bold text-center">Cadastrar Usuário</h2>
+    <h2>Cadastrar Usuário</h2>
     <input type="text" id="nomeCompleto" placeholder="Nome completo">
     <input type="date" id="dataNascimento">
     <input type="email" id="novoEmail" placeholder="E-mail">
@@ -210,7 +158,7 @@
 
 <div class="popup-overlay" id="popupEsqueciSenha">
   <div class="popup">
-    <h2 class="text-lg font-bold text-center">Recuperar Senha</h2>
+    <h2>Recuperar Senha</h2>
     <input type="email" id="emailRecuperar" placeholder="Digite seu e-mail cadastrado">
     <button onclick="enviarSenha()">Enviar senha</button>
     <button class="close-btn" onclick="fecharPopupEsqueciSenha()">Cancelar</button>
@@ -218,25 +166,78 @@
 </div>
 
 <script>
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const senha = document.getElementById('senha').value;
 
-    if (email === "teste@teste.com" && senha === "123456") {
-      alert("Login efetuado!");
-      window.location.href = "./menu.html"; // Correção aqui!
-    } else {
-      alert("E-mail ou senha incorretos!");
+    try {
+      const response = await fetch('http://localhost:3000/api/buscar-usuario', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await response.json();
+
+      if (!data.nome) {
+        alert('Usuário não encontrado!');
+        return;
+      }
+
+      if (data.senha !== senha) {
+        alert('Senha incorreta!');
+        return;
+      }
+
+      localStorage.setItem('email', email);
+      console.log('Login efetuado com sucesso!');
+      window.location.href = './menu.html';
+
+    } catch (err) {
+      console.error('Erro ao fazer login:', err);
+      alert('Erro ao conectar com o servidor.');
+    }
+  }
+
+  async function cadastrarUsuario() {
+    const nome = document.getElementById('nomeCompleto').value;
+    const nascimento = document.getElementById('dataNascimento').value;
+    const email = document.getElementById('novoEmail').value;
+    const senha = document.getElementById('novaSenha').value;
+    const confirmarSenha = document.getElementById('confirmarSenha').value;
+
+    if (!nome || !nascimento || !email || !senha || !confirmarSenha) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    if (senha !== confirmarSenha) {
+      alert("As senhas não conferem!");
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/usuario', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, email, senha, dataNascimento: nascimento })
+      });
+
+      const data = await response.json();
+      alert(data.mensagem || "Cadastro realizado!");
+      fecharPopupCadastro();
+
+    } catch (err) {
+      console.error('Erro ao cadastrar usuário:', err);
+      alert('Erro ao cadastrar.');
     }
   }
 
   function confirmarSalvarSenha(checkbox) {
     if (checkbox.checked) {
       const confirmar = confirm("Deseja salvar a senha neste dispositivo?");
-      if (!confirmar) {
-        checkbox.checked = false;
-      }
+      if (!confirmar) checkbox.checked = false;
     }
   }
 
@@ -256,28 +257,6 @@
     document.getElementById('popupEsqueciSenha').style.display = 'none';
   }
 
-  function cadastrarUsuario() {
-    const nome = document.getElementById('nomeCompleto').value;
-    const nascimento = document.getElementById('dataNascimento').value;
-    const email = document.getElementById('novoEmail').value;
-    const senha = document.getElementById('novaSenha').value;
-    const confirmarSenha = document.getElementById('confirmarSenha').value;
-
-    if (!nome || !nascimento || !email || !senha || !confirmarSenha) {
-      alert("Preencha todos os campos!");
-      return;
-    }
-
-    if (senha !== confirmarSenha) {
-      alert("As senhas não conferem!");
-      return;
-    }
-
-    console.log({ nome, nascimento, email, senha });
-    alert("Cadastro enviado com sucesso!");
-    fecharPopupCadastro();
-  }
-
   function enviarSenha() {
     const emailRecuperar = document.getElementById('emailRecuperar').value;
 
@@ -286,7 +265,7 @@
       return;
     }
 
-    fetch('/api/enviar-recuperacao', {
+    fetch('http://localhost:3000/api/enviar-recuperacao', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: emailRecuperar })
@@ -306,6 +285,5 @@
     });
   }
 </script>
-
 </body>
 </html>
