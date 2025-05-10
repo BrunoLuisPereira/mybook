@@ -74,7 +74,7 @@
       height: 20px;
       cursor: pointer;
     }
-    .login-button button {
+    .login-button {
       background-color: white;
       border: 1px solid gray;
       padding: 10px 24px;
@@ -82,17 +82,28 @@
       font-size: 14px;
       font-weight: bold;
       cursor: pointer;
+      width: 80%;
+      text-align: center;
+      transition: background-color 0.2s;
     }
-    .link {
-      font-size: 12px;
-      color: purple;
-      cursor: pointer;
+    .login-button:hover {
+      background-color: #e5e5e5;
     }
-    .cadastrar-usuario {
+    /* estilo padronizado para links virou botão */
+    .aux-button {
+      background-color: white;
+      border: 1px solid gray;
+      padding: 8px 16px;
+      border-radius: 8px;
       font-size: 14px;
-      color: red;
       font-weight: bold;
       cursor: pointer;
+      width: 80%;
+      text-align: center;
+      transition: background-color 0.2s;
+    }
+    .aux-button:hover {
+      background-color: #e5e5e5;
     }
     .popup-overlay {
       position: fixed;
@@ -114,176 +125,140 @@
       flex-direction: column;
       gap: 12px;
     }
+    .popup .login-button,
+    .popup .aux-button {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
-<div class="background-cinza">
-  <div class="image-container">
-    <img src="IMG/mybook.png" alt="MyBook">
-  </div>
-  <div class="form-container">
-    <div class="input-group">
-      <label for="email">Usuário:</label>
-      <input id="email" type="email" required>
+  <div class="background-cinza">
+    <div class="image-container">
+      <img src="IMG/mybook.png" alt="MyBook">
     </div>
-    <div class="input-group">
-      <label for="senha">Senha:</label>
-      <div class="senha-wrapper">
-        <input id="senha" type="password" required>
-        <div class="checkbox-inline">
-          <input type="checkbox" id="salvar" onchange="confirmarSalvarSenha(this)">
+    <div class="form-container">
+      <div class="input-group">
+        <label for="email">Usuário:</label>
+        <input id="email" type="email" required>
+      </div>
+      <div class="input-group">
+        <label for="senha">Senha:</label>
+        <div class="senha-wrapper">
+          <input id="senha" type="password" required>
+          <div class="checkbox-inline">
+            <input type="checkbox" id="salvar" onchange="confirmarSalvarSenha(this)">
+          </div>
         </div>
       </div>
+      <!-- botão esqueci senha como aux-button -->
+      <button class="login-button" onclick="handleLogin(event)">Login</button>
+
+      <!-- botão login -->
+      <button class="aux-button" onclick="abrirPopupEsqueciSenha()">Esqueci senha</button>
+
     </div>
-    <a class="link" onclick="abrirPopupEsqueciSenha()">Esqueci senha</a>
-    <div class="login-button">
-      <button onclick="handleLogin(event)">Login</button>
+    <!-- botão cadastrar também como aux-button -->
+    <button class="aux-button" onclick="abrirPopupCadastro()">Cadastrar usuário</button>
+  </div>
+
+  <!-- popup de cadastro -->
+  <div class="popup-overlay" id="popupCadastro">
+    <div class="popup">
+      <h2>Cadastrar Usuário</h2>
+      <input type="text" id="nomeCompleto" placeholder="Nome completo">
+      <input type="date" id="dataNascimento">
+      <input type="email" id="novoEmail" placeholder="E-mail">
+      <input type="password" id="novaSenha" placeholder="Senha">
+      <input type="password" id="confirmarSenha" placeholder="Confirmar senha">
+      <button class="login-button" onclick="cadastrarUsuario()">Cadastrar</button>
+      <button class="aux-button" onclick="fecharPopupCadastro()">Cancelar</button>
     </div>
   </div>
-  <a class="cadastrar-usuario" onclick="abrirPopupCadastro()">Cadastrar usuário</a>
-</div>
 
-<div class="popup-overlay" id="popupCadastro">
-  <div class="popup">
-    <h2>Cadastrar Usuário</h2>
-    <input type="text" id="nomeCompleto" placeholder="Nome completo">
-    <input type="date" id="dataNascimento">
-    <input type="email" id="novoEmail" placeholder="E-mail">
-    <input type="password" id="novaSenha" placeholder="Senha">
-    <input type="password" id="confirmarSenha" placeholder="Confirmar senha">
-    <button onclick="cadastrarUsuario()">Cadastrar</button>
-    <button class="close-btn" onclick="fecharPopupCadastro()">Cancelar</button>
+  <!-- popup de esqueci senha -->
+  <div class="popup-overlay" id="popupEsqueciSenha">
+    <div class="popup">
+      <h2>Recuperar Senha</h2>
+      <input type="email" id="emailRecuperar" placeholder="Digite seu e-mail cadastrado">
+      <button class="login-button" onclick="enviarSenha()">Enviar senha</button>
+      <button class="aux-button" onclick="fecharPopupEsqueciSenha()">Cancelar</button>
+    </div>
   </div>
-</div>
 
-<div class="popup-overlay" id="popupEsqueciSenha">
-  <div class="popup">
-    <h2>Recuperar Senha</h2>
-    <input type="email" id="emailRecuperar" placeholder="Digite seu e-mail cadastrado">
-    <button onclick="enviarSenha()">Enviar senha</button>
-    <button class="close-btn" onclick="fecharPopupEsqueciSenha()">Cancelar</button>
-  </div>
-</div>
+  <script>
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      try {
+        const resp = await fetch('http://localhost:3000/api/buscar-usuario', {
+          method: 'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ email })
+        });
+        const data = await resp.json();
+        if(!data.nome){ alert('Usuário não encontrado!'); return; }
+        if(data.senha!==senha){ alert('Senha incorreta!'); return; }
+        localStorage.setItem('email', email);
+        window.location.href = './menu.html';
+      } catch(err){
+        console.error(err);
+        alert('Erro ao conectar com o servidor.');
+      }
+    }
 
-<script>
-  async function handleLogin(e) {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const senha = document.getElementById('senha').value;
+    async function cadastrarUsuario(){
+      const nome = document.getElementById('nomeCompleto').value;
+      const nascimento = document.getElementById('dataNascimento').value;
+      const email = document.getElementById('novoEmail').value;
+      const senha = document.getElementById('novaSenha').value;
+      const confirmar = document.getElementById('confirmarSenha').value;
+      if(!nome||!nascimento||!email||!senha||!confirmar){ return alert('Preencha todos os campos!'); }
+      if(senha!==confirmar){ return alert('As senhas não conferem!'); }
+      try{
+        const resp = await fetch('http://localhost:3000/api/usuario', {
+          method:'PUT',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ nome, email, senha, dataNascimento: nascimento })
+        });
+        const j = await resp.json();
+        alert(j.mensagem||'Cadastro realizado!');
+        fecharPopupCadastro();
+      }catch(e){
+        console.error(e);
+        alert('Erro ao cadastrar.');
+      }
+    }
 
-    try {
-      const response = await fetch('http://localhost:3000/api/buscar-usuario', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+    function confirmarSalvarSenha(chk){
+      if(chk.checked && !confirm('Deseja salvar a senha neste dispositivo?')){
+        chk.checked=false;
+      }
+    }
+
+    function abrirPopupCadastro(){ document.getElementById('popupCadastro').style.display='flex' }
+    function fecharPopupCadastro(){ document.getElementById('popupCadastro').style.display='none' }
+    function abrirPopupEsqueciSenha(){ document.getElementById('popupEsqueciSenha').style.display='flex' }
+    function fecharPopupEsqueciSenha(){ document.getElementById('popupEsqueciSenha').style.display='none' }
+
+    function enviarSenha(){
+      const emailRec = document.getElementById('emailRecuperar').value;
+      if(!emailRec){ return alert('Digite seu e-mail para recuperação!'); }
+      fetch('http://localhost:3000/api/enviar-recuperacao',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ email: emailRec })
+      })
+      .then(r=>r.json())
+      .then(j=>{
+        alert(j.sucesso?'Se o e-mail estiver cadastrado, enviamos a senha!':'E-mail não encontrado.');
+        fecharPopupEsqueciSenha();
+      })
+      .catch(err=>{
+        console.error(err);
+        alert('Erro ao enviar e-mail.');
       });
-
-      const data = await response.json();
-
-      if (!data.nome) {
-        alert('Usuário não encontrado!');
-        return;
-      }
-
-      if (data.senha !== senha) {
-        alert('Senha incorreta!');
-        return;
-      }
-
-      localStorage.setItem('email', email);
-      console.log('Login efetuado com sucesso!');
-      window.location.href = './menu.html';
-
-    } catch (err) {
-      console.error('Erro ao fazer login:', err);
-      alert('Erro ao conectar com o servidor.');
     }
-  }
-
-  async function cadastrarUsuario() {
-    const nome = document.getElementById('nomeCompleto').value;
-    const nascimento = document.getElementById('dataNascimento').value;
-    const email = document.getElementById('novoEmail').value;
-    const senha = document.getElementById('novaSenha').value;
-    const confirmarSenha = document.getElementById('confirmarSenha').value;
-
-    if (!nome || !nascimento || !email || !senha || !confirmarSenha) {
-      alert("Preencha todos os campos!");
-      return;
-    }
-
-    if (senha !== confirmarSenha) {
-      alert("As senhas não conferem!");
-      return;
-    }
-
-    try {
-      const response = await fetch('http://localhost:3000/api/usuario', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, email, senha, dataNascimento: nascimento })
-      });
-
-      const data = await response.json();
-      alert(data.mensagem || "Cadastro realizado!");
-      fecharPopupCadastro();
-
-    } catch (err) {
-      console.error('Erro ao cadastrar usuário:', err);
-      alert('Erro ao cadastrar.');
-    }
-  }
-
-  function confirmarSalvarSenha(checkbox) {
-    if (checkbox.checked) {
-      const confirmar = confirm("Deseja salvar a senha neste dispositivo?");
-      if (!confirmar) checkbox.checked = false;
-    }
-  }
-
-  function abrirPopupCadastro() {
-    document.getElementById('popupCadastro').style.display = 'flex';
-  }
-
-  function fecharPopupCadastro() {
-    document.getElementById('popupCadastro').style.display = 'none';
-  }
-
-  function abrirPopupEsqueciSenha() {
-    document.getElementById('popupEsqueciSenha').style.display = 'flex';
-  }
-
-  function fecharPopupEsqueciSenha() {
-    document.getElementById('popupEsqueciSenha').style.display = 'none';
-  }
-
-  function enviarSenha() {
-    const emailRecuperar = document.getElementById('emailRecuperar').value;
-
-    if (!emailRecuperar) {
-      alert("Digite seu e-mail para recuperação!");
-      return;
-    }
-
-    fetch('http://localhost:3000/api/enviar-recuperacao', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: emailRecuperar })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.sucesso) {
-        alert('Se o e-mail estiver cadastrado, enviamos a senha!');
-      } else {
-        alert('E-mail não encontrado.');
-      }
-      fecharPopupEsqueciSenha();
-    })
-    .catch(error => {
-      console.error('Erro ao enviar:', error);
-      alert('Erro ao enviar e-mail.');
-    });
-  }
-</script>
+  </script>
 </body>
 </html>
