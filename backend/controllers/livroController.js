@@ -1,8 +1,6 @@
-// controllers/livroController.js
 
 const db = require('../db');
 
-// Adicionar livro
 exports.adicionarLivro = async (req, res) => {
   const { email, titulo, autor, nota } = req.body;
 
@@ -18,11 +16,9 @@ exports.adicionarLivro = async (req, res) => {
   }
 };
 
-// Listar livros do usuário
-// Rota esperada: GET /api/livros/:email
+
 exports.listarLivros = async (req, res) => {
-  // se estiver usando query string, use req.query.email
-  // aqui usamos req.params.email para o padrão /livros/:email
+  
   const email = req.params.email || req.query.email;
 
   try {
@@ -37,8 +33,7 @@ exports.listarLivros = async (req, res) => {
   }
 };
 
-// Atualizar um livro existente (pelo id)
-// Rota esperada: PUT /api/livros/:id
+
 exports.atualizarLivro = async (req, res) => {
   const { id } = req.params;
   const { titulo, autor, nota } = req.body;
@@ -58,8 +53,6 @@ exports.atualizarLivro = async (req, res) => {
   }
 };
 
-// Excluir um livro (pelo id)
-// Rota esperada: DELETE /api/livros/:id
 exports.excluirLivro = async (req, res) => {
   const { id } = req.params;
 

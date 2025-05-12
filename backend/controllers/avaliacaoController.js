@@ -1,8 +1,6 @@
-// controllers/avaliacaoController.js
 
 const db = require('../db');
 
-// Adicionar nova avaliação
 exports.adicionarAvaliacao = async (req, res) => {
   const { email, nome, nota, comentario, data } = req.body;
 
@@ -18,7 +16,6 @@ exports.adicionarAvaliacao = async (req, res) => {
   }
 };
 
-// Listar avaliações de um usuário específico
 exports.listarAvaliacoesDoUsuario = async (req, res) => {
   const { email } = req.params;
 
@@ -34,7 +31,6 @@ exports.listarAvaliacoesDoUsuario = async (req, res) => {
   }
 };
 
-// Listar os Top 10 livros com melhores médias e contagem de avaliações
 exports.listarTop10Global = async (req, res) => {
   try {
     const [top10] = await db.query(`

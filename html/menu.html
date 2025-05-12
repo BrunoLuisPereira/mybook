@@ -174,7 +174,7 @@
 
       <div class="menu-item">
         <div class="imagem-quadrado">
-          <img src="IMG/listadesejos.png" alt="Lista de Desejos">
+          <img src="IMG/desejos.png" alt="Lista de Desejos">
         </div>
         <a href="listadesejos.html" class="menu-button">Lista de Desejos</a>
       </div>
@@ -185,7 +185,7 @@
 </div>
 
 <script>
-  // Ao carregar a página, busca o nome do usuário
+  
   window.onload = function() {
     const emailLogado = localStorage.getItem('email');
     if (!emailLogado) {
@@ -207,7 +207,6 @@
     });
   };
 
-  // Função de logout: limpa o storage e volta ao login
   function logout() {
     localStorage.clear();
     window.location.href = 'index.html';

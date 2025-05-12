@@ -1,8 +1,6 @@
-// controllers/leituraController.js
 
 const db = require('../db');
 
-// Adicionar nova leitura (já recebe data de início e término)
 exports.adicionarLeitura = async (req, res) => {
   const { email, titulo, inicio, fim } = req.body;
 
@@ -22,7 +20,6 @@ exports.adicionarLeitura = async (req, res) => {
   }
 };
 
-// Atualizar data de início (recebe data manualmente via body)
 exports.marcarInicio = async (req, res) => {
   const { id } = req.params;
   const { data } = req.body;

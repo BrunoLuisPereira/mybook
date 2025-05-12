@@ -1,8 +1,6 @@
-// controllers/desejoController.js
 
 const db = require('../db');
 
-// Adicionar desejo
 exports.adicionarDesejo = async (req, res) => {
   const { email, livro, prioridade } = req.body;
 
@@ -29,7 +27,6 @@ exports.removerDesejo = async (req, res) => {
   }
   };
 
-// Listar desejos do usuário
 exports.listarDesejos = async (req, res) => {
   const { email } = req.query;
 

@@ -55,12 +55,12 @@
     .alta { background-color:#dc2626; color:white }
     .media { background-color:#f59e0b; color:white }
     .baixa { background-color:#16a34a; color:white }
-    /* tabela */
+    
     .table-container { width:100%; overflow-x:auto; margin-top:20px }
     table { width:100%; border-collapse:collapse }
     th, td { padding:8px; border-bottom:1px solid #ccc; text-align:left }
     th { background:#f3f4f6; font-weight:bold }
-    /* botão Excluir estilizado igual badge */
+    
     .btn-excluir {
       background-color: #e53e3e;
       color: #fff;
@@ -105,10 +105,10 @@
         <button type="submit">Adicionar</button>
       </form>
 
-      <!-- Botão "Livros Desejados" -->
+      
       <button id="btnDesejos">Livros Desejados</button>
 
-      <!-- Container da tabela -->
+      
       <div id="tabelaDesejos" class="table-container"></div>
     </div>
   </div>
@@ -118,7 +118,7 @@
       location.href = 'menu.html';
     }
 
-    // adicionar desejo via API
+    
     document.getElementById('formDesejo').onsubmit = async e => {
       e.preventDefault();
       const livro = e.target.livro.value.trim();
@@ -135,7 +135,7 @@
       e.target.reset();
     };
 
-    // botão para carregar tabela de desejos
+    
     document.getElementById('btnDesejos').onclick = carregarTabelaDesejos;
 
     async function carregarTabelaDesejos() {
@@ -185,7 +185,7 @@
       div.innerHTML = html;
     }
 
-    // Exclui um desejo pelo ID
+    
     async function excluirDesejo(id) {
       if (!confirm('Deseja realmente excluir este desejo?')) return;
       await fetch(`http://localhost:3000/api/desejos/${id}`, {

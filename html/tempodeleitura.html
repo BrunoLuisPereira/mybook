@@ -66,7 +66,7 @@
     }
     #tabelaContainer {
       width: 100%;
-      max-height: 250px;    /* ajusta conforme precisar */
+      max-height: 250px;    
       overflow-y: auto;
       margin-top: 16px;
     }
@@ -102,7 +102,7 @@
 
       <h1 class="text-2xl font-bold mb-4 mt-2">📘 Tempo de Leitura</h1>
 
-      <!-- Formulário de cadastro -->
+      
       <form id="formLeitura" class="w-full max-w-sm">
         <div class="mb-4 text-left">
           <label for="titulo" class="block font-semibold mb-1">Título do Livro:</label>
@@ -119,10 +119,10 @@
         <button type="submit">Adicionar Leitura</button>
       </form>
 
-      <!-- Botão "Minhas Leituras" -->
+      
       <button id="btnListar" type="button">Minhas Leituras</button>
 
-      <!-- Container da tabela com scroll -->
+      
       <div id="tabelaContainer"></div>
 
     </div>
@@ -133,7 +133,7 @@
       window.location.href = 'menu.html';
     }
 
-    // Helpers
+    
     function formatarData(iso) {
       if (!iso) return '---';
       const d = new Date(iso);
@@ -143,7 +143,7 @@
       return `${dd}/${mm}/${yyyy}`;
     }
 
-    // Envia nova leitura completa
+    
     document.getElementById('formLeitura').addEventListener('submit', async e => {
       e.preventDefault();
       const titulo = document.getElementById('titulo').value.trim();
@@ -169,7 +169,7 @@
       }
     });
 
-    // Lista as leituras do usuário em tabela
+    
     document.getElementById('btnListar').addEventListener('click', carregarLeituras);
 
     async function carregarLeituras() {

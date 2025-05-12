@@ -1,6 +1,5 @@
-// controllers/usuarioController.js
 
-const db = require('../db'); // conexão com banco
+const db = require('../db'); 
 const Usuario = require('../models/Usuario');
 
 exports.buscarUsuario = async (req, res) => {
@@ -20,7 +19,7 @@ exports.buscarUsuario = async (req, res) => {
       cpf: usuario.cpf,
       dataNascimento: usuario.dataNascimento,
       fotoPerfil: usuario.fotoPerfil,
-      senha: usuario.senha // necessário para validar no login
+      senha: usuario.senha 
     });
   } catch (err) {
     console.error('Erro ao buscar usuário:', err);
@@ -35,7 +34,7 @@ exports.atualizarPerfil = async (req, res) => {
     const [rows] = await db.query('SELECT * FROM usuarios WHERE email = ?', [email]);
 
     if (rows.length === 0) {
-      // usuário não existe → criar novo
+      
       await db.query(
         'INSERT INTO usuarios (nome, email, senha, cpf, dataNascimento, fotoPerfil) VALUES (?, ?, ?, ?, ?, ?)',
         [nome, email, senha || '', cpf || '', dataNascimento || null, fotoPerfil || null]
@@ -43,7 +42,7 @@ exports.atualizarPerfil = async (req, res) => {
       return res.status(201).json({ mensagem: 'Usuário criado com sucesso.' });
     }
 
-    // usuário existe → atualizar
+    
     await db.query(
       'UPDATE usuarios SET nome = ?, cpf = ?, dataNascimento = ?, fotoPerfil = ? WHERE email = ?',
       [nome, cpf, dataNascimento, fotoPerfil, email]
