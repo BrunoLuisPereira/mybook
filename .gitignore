@@ -1,23 +1,40 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# --------------------------------------------------------------------
+# DEPENDÊNCIAS
+# --------------------------------------------------------------------
+/node_modules/            # node_modules na raiz
+**/node_modules/          # node_modules em qualquer subdiretório (monorepo)
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+# --------------------------------------------------------------------
+# ARTEFATOS DE BUILD E TESTE
+# --------------------------------------------------------------------
+/build/                   # saída de build da raiz
+**/build/                 # build em subdiretórios
 
-# testing
-/coverage
+/coverage/                # relatório Jest raiz
+**/coverage/              # relatório Jest em subdiretórios
 
-# production
-/build
+# evidence & docs gerados pelos testes (Artillery, Swagger etc.)
+**/evidencias/
+**/docs/
+**/load-test/**/results/
 
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
+# --------------------------------------------------------------------
+# ARQUIVOS TEMPORÁRIOS E LOGS
+# --------------------------------------------------------------------
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
+
+# --------------------------------------------------------------------
+# AMBIENTES / CONFIGURAÇÕES LOCAIS
+# --------------------------------------------------------------------
+.env*                     # qualquer .env, inclusive variações .env.local
+
+# --------------------------------------------------------------------
+# SISTEMA OPERACIONAL / IDE
+# --------------------------------------------------------------------
+.DS_Store                 # macOS Finder
+Thumbs.db                 # Windows
+.vscode/                  # settings locais do VS Code
+.idea/                    # JetBrains
