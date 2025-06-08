@@ -1,239 +1,212 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tempo de Leitura</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tempo de Leitura - MyBook</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css" rel="stylesheet" />
   <style>
     body {
       background-color: #000;
-      min-height: 100vh;
       margin: 0;
+      min-height: 100vh;
       font-family: sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
       position: relative;
+      overflow: hidden;
     }
-
     .background-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; justify-content: center; align-items: center;
       z-index: 0;
     }
-
     .background-image {
-      background: url('IMG/mybook.png') no-repeat center center;
+      background: url('IMG/tempodeleitura.png') no-repeat center center;
       background-size: cover;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       filter: brightness(0.4) blur(1px);
       border-radius: 80px;
-      max-width: 500px;
-      min-height: 90vh;
+      max-width: 500px; min-height: 90vh;
       box-shadow: 0 0 30px rgba(255,255,255,0.1);
     }
-
     .popup-overlay {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 500px;
-      min-height: 90vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 80px;
-      overflow: hidden;
-      padding: 0 20px;
+      position: relative; z-index: 1;
+      width: 100%; max-width: 500px; min-height: 90vh;
+      display: flex; justify-content: center; align-items: center;
+      border-radius: 80px; overflow: hidden; padding: 0 20px;
     }
-
     .popup-content {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 30px 20px;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 400px;
+      background: rgba(255,255,255,0.95);
+      padding: 30px 20px; border-radius: 16px;
+      width: 90%; max-width: 400px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: flex; flex-direction: column; align-items: center;
       position: relative;
     }
-
     .voltar {
-      position: absolute;
-      top: 10px;
-      left: 20px;
-      font-size: 14px;
-      font-weight: bold;
-      color: red;
-      text-decoration: underline;
-      cursor: pointer;
+      position: absolute; top: 10px; left: 20px;
+      font-size: 14px; font-weight: bold; color: red;
+      text-decoration: underline; cursor: pointer;
     }
-
     input, button {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      width: 100%; padding: 10px; margin-bottom: 12px;
+      border-radius: 8px; border: 1px solid #ccc;
       font-size: 14px;
     }
-
     button {
-      background-color: #4CAF50;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
+      background-color: #4CAF50; color: white;
+      font-weight: bold; cursor: pointer;
       transition: background-color 0.3s;
     }
-
     button:hover {
       background-color: #45a049;
     }
-
-    .checkbox-group {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      margin-top: 8px;
+    #tabelaContainer {
+      width: 100%;
+      max-height: 250px;    
+      overflow-y: auto;
+      margin-top: 16px;
     }
-
-    .melhor {
-      background-color: #bbf7d0;
-      border: 2px solid #22c55e;
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
-
-    .titulo-livro {
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+      background: #fff;
+    }
+    th {
+      background: #f3f3f3;
       font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .data-text {
-      font-size: 12px;
-      color: #4b5563;
+      position: sticky;
+      top: 0;
     }
   </style>
 </head>
 
 <body>
 
-<div class="background-container">
-  <div class="background-image"></div>
-</div>
-
-<div class="popup-overlay">
-  <div class="popup-content">
-
-    <div class="voltar" onclick="voltarMenu()">Voltar</div>
-
-    <h1 class="text-2xl font-bold mb-4 mt-2">📘 Tempo de Leitura
-    </h1>
-
-    <form id="formLeitura" class="mb-4">
-      <input id="titulo" type="text" placeholder="Nome do livro" required>
-      <button type="submit">Adicionar Livro</button>
-    </form>
-
-    <h2 class="text-xl font-bold mb-4">Meus Livros</h2>
-
-    <div id="listaLeituras" class="text-sm space-y-3 w-full">
-      
-    </div>
-
+  <div class="background-container">
+    <div class="background-image"></div>
   </div>
-</div>
 
-<script>
-  function voltarMenu() {
-    window.location.href = 'menu.html';
-  }
+  <div class="popup-overlay">
+    <div class="popup-content">
 
-  const form = document.getElementById('formLeitura');
-  const lista = document.getElementById('listaLeituras');
+      <div class="voltar" onclick="voltarMenu()">Voltar</div>
 
-  function salvarLeitura(leitura) {
-    const leituras = JSON.parse(localStorage.getItem('leituras')) || [];
-    leituras.push(leitura);
-    localStorage.setItem('leituras', JSON.stringify(leituras));
-  }
+      <h1 class="text-2xl font-bold mb-4 mt-2">📘 Tempo de Leitura</h1>
 
-  function carregarLeituras() {
-    lista.innerHTML = '';
-    const leituras = JSON.parse(localStorage.getItem('leituras')) || [];
-
-    leituras.forEach((leitura, index) => {
-      const div = document.createElement('div');
-      div.className = 'bg-white rounded p-2 shadow-sm';
-
-      div.innerHTML = `
-        <div class="titulo-livro">${leitura.titulo}</div>
-        <div class="checkbox-group">
-          <div>
-            <input type="checkbox" id="inicio-${index}" ${leitura.inicio ? 'checked' : ''} onclick="registrarInicio(${index})">
-            <label class="data-text">Início: ${leitura.inicio || '---'}</label>
-          </div>
-          <div>
-            <input type="checkbox" id="fim-${index}" ${leitura.fim ? 'checked' : ''} onclick="registrarFim(${index})">
-            <label class="data-text">Término: ${leitura.fim || '---'}</label>
-          </div>
+      
+      <form id="formLeitura" class="w-full max-w-sm">
+        <div class="mb-4 text-left">
+          <label for="titulo" class="block font-semibold mb-1">Título do Livro:</label>
+          <input id="titulo" type="text" placeholder="Digite o título" required />
         </div>
-        <p id="tempo-${index}" class="text-center text-green-700 font-semibold text-xs mt-2">
-          Tempo: ${calcularDias(leitura.inicio, leitura.fim)} dia(s)
-        </p>
-      `;
+        <div class="mb-4 text-left">
+          <label for="inicio" class="block font-semibold mb-1">Data de Início:</label>
+          <input id="inicio" type="date" required />
+        </div>
+        <div class="mb-4 text-left">
+          <label for="fim" class="block font-semibold mb-1">Data de Término:</label>
+          <input id="fim" type="date" required />
+        </div>
+        <button type="submit">Adicionar Leitura</button>
+      </form>
 
-      lista.appendChild(div);
-    });
-  }
+      
+      <button id="btnListar" type="button">Minhas Leituras</button>
 
-  function registrarInicio(index) {
-    const leituras = JSON.parse(localStorage.getItem('leituras')) || [];
-    leituras[index].inicio = new Date().toISOString().slice(0,10);
-    localStorage.setItem('leituras', JSON.stringify(leituras));
-    carregarLeituras();
-  }
+      
+      <div id="tabelaContainer"></div>
 
-  function registrarFim(index) {
-    const leituras = JSON.parse(localStorage.getItem('leituras')) || [];
-    leituras[index].fim = new Date().toISOString().slice(0,10);
-    localStorage.setItem('leituras', JSON.stringify(leituras));
-    carregarLeituras();
-  }
+    </div>
+  </div>
 
-  function calcularDias(inicio, fim) {
-    if (!inicio || !fim) return 0;
-    const d1 = new Date(inicio);
-    const d2 = new Date(fim);
-    const diff = Math.abs(d2 - d1);
-    return Math.ceil(diff / (1000 * 60 * 60 * 24));
-  }
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const titulo = document.getElementById('titulo').value.trim();
-
-    if (titulo) {
-      salvarLeitura({ titulo });
-      form.reset();
-      carregarLeituras();
+  <script>
+    function voltarMenu() {
+      window.location.href = 'menu.html';
     }
-  });
 
-  window.onload = carregarLeituras;
-</script>
+    
+    function formatarData(iso) {
+      if (!iso) return '---';
+      const d = new Date(iso);
+      const dd = String(d.getDate()).padStart(2,'0');
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const yyyy = d.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    }
+
+    
+    document.getElementById('formLeitura').addEventListener('submit', async e => {
+      e.preventDefault();
+      const titulo = document.getElementById('titulo').value.trim();
+      const inicio = document.getElementById('inicio').value;
+      const fim    = document.getElementById('fim').value;
+      const email  = localStorage.getItem('email');
+      if (!titulo || !inicio || !fim || !email) {
+        alert('Preencha todos os campos!');
+        return;
+      }
+      try {
+        const res = await fetch('http://localhost:3000/api/leituras', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, titulo, inicio, fim })
+        });
+        if (!res.ok) throw new Error('Erro ao adicionar');
+        this.reset();
+        alert('Leitura adicionada!');
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao adicionar leitura.');
+      }
+    });
+
+    
+    document.getElementById('btnListar').addEventListener('click', carregarLeituras);
+
+    async function carregarLeituras() {
+      const email = localStorage.getItem('email');
+      if (!email) return;
+      try {
+        const res = await fetch(`http://localhost:3000/api/leituras/${encodeURIComponent(email)}`);
+        if (!res.ok) throw new Error('Falha ao buscar');
+        const dados = await res.json();
+
+        const container = document.getElementById('tabelaContainer');
+        if (dados.length === 0) {
+          container.innerHTML = '<p class="mt-4 text-gray-700">Nenhuma leitura cadastrada.</p>';
+          return;
+        }
+
+        let html = `<table>
+          <thead>
+            <tr><th>Título</th><th>Início</th><th>Término</th></tr>
+          </thead>
+          <tbody>`;
+        dados.forEach(l => {
+          html += `<tr>
+            <td>${l.titulo}</td>
+            <td>${formatarData(l.inicio)}</td>
+            <td>${formatarData(l.fim)}</td>
+          </tr>`;
+        });
+        html += `</tbody></table>`;
+        container.innerHTML = html;
+
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao carregar leituras.');
+      }
+    }
+  </script>
 
 </body>
 </html>

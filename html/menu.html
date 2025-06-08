@@ -21,66 +21,54 @@
 
     .background-container {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; justify-content: center; align-items: center;
       z-index: 0;
     }
 
     .background-image {
       background: url('IMG/mybook.png') no-repeat center center;
       background-size: cover;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       filter: brightness(0.4) blur(1px);
       border-radius: 80px;
-      max-width: 500px;
-      min-height: 90vh;
-      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+      max-width: 500px; min-height: 90vh;
+      box-shadow: 0 0 30px rgba(255,255,255,0.1);
     }
 
     .menu-overlay {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 500px;
-      min-height: 90vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 80px;
-      overflow: hidden;
-      padding: 0 20px;
+      position: relative; z-index: 1;
+      width: 100%; max-width: 500px; min-height: 90vh;
+      display: flex; justify-content: center; align-items: center;
+      border-radius: 80px; overflow: hidden; padding: 0 20px;
     }
 
     .menu-content {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 30px 20px;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 400px;
+      background: rgba(255,255,255,0.95);
+      padding: 30px 20px; border-radius: 16px;
+      width: 90%; max-width: 400px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: flex; flex-direction: column; align-items: center;
     }
 
-    .top-link {
+    .top-links {
       width: 100%;
-      text-align: right;
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
       margin-bottom: 10px;
     }
 
-    .top-link a {
-      font-size: 12px;
+    .top-links a,
+    .top-links button {
+      font-size: 14px;
       font-weight: 600;
-      color: #dc2626;
+      color: #c02f1c;
       text-decoration: underline;
+      background: none;
+      border: none;
+      cursor: pointer;
     }
 
     .user-info {
@@ -90,7 +78,7 @@
     }
 
     .user-info p:first-child {
-      font-size: 14px;
+      font-size: 32px;
       font-weight: 600;
       color: #374151;
     }
@@ -111,18 +99,13 @@
     }
 
     .imagem-quadrado {
-      width: 90px;
-      height: 70px;
-      border-radius: 16px;
-      border: 3px solid black;
-      overflow: hidden;
-      flex-shrink: 0;
+      width: 90px; height: 70px;
+      border-radius: 16px; border: 3px solid black;
+      overflow: hidden; flex-shrink: 0;
     }
 
     .imagem-quadrado img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      width: 100%; height: 100%; object-fit: cover;
       display: block;
     }
 
@@ -147,7 +130,6 @@
     }
   </style>
 </head>
-
 <body>
 
 <div class="background-container">
@@ -156,14 +138,15 @@
 
 <div class="menu-overlay">
   <div class="menu-content">
-    
-    <div class="top-link">
+
+    <div class="top-links">
       <a href="perfil.html">Perfil</a>
+      <button onclick="logout()">Logout</button>
     </div>
 
     <div class="user-info">
       <p>Bem-vindo</p>
-      <p id="nomeUsuario">Nome da pessoa logada</p>
+      <p id="nomeUsuario">Carregando...</p>
     </div>
 
     <div class="w-full flex flex-col items-center">
@@ -184,14 +167,14 @@
 
       <div class="menu-item">
         <div class="imagem-quadrado">
-          <img src="IMG/tempo.png" alt="Tempo de Leitura">
+          <img src="IMG/tempoleitura.png" alt="Tempo de Leitura">
         </div>
         <a href="tempodeleitura.html" class="menu-button">Tempo de Leitura</a>
       </div>
 
       <div class="menu-item">
         <div class="imagem-quadrado">
-          <img src="IMG/listadesejos.png" alt="Lista de Desejos">
+          <img src="IMG/desejos.png" alt="Lista de Desejos">
         </div>
         <a href="listadesejos.html" class="menu-button">Lista de Desejos</a>
       </div>
@@ -202,32 +185,32 @@
 </div>
 
 <script>
+  
   window.onload = function() {
     const emailLogado = localStorage.getItem('email');
-
     if (!emailLogado) {
       window.location.href = "./index.html";
       return;
     }
-
-    fetch('/api/buscar-usuario', {
+    fetch('http://localhost:3000/api/buscar-usuario', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: emailLogado })
     })
-    .then(response => response.json())
+    .then(r => r.json())
     .then(data => {
-      if (data.nome) {
-        document.getElementById('nomeUsuario').innerText = data.nome;
-      } else {
-        document.getElementById('nomeUsuario').innerText = 'Usuário Desconhecido';
-      }
+      document.getElementById('nomeUsuario').innerText = data.nome || 'Usuário Desconhecido';
     })
-    .catch(error => {
-      console.error('Erro ao buscar usuário:', error);
+    .catch(err => {
+      console.error('Erro ao buscar usuário:', err);
       document.getElementById('nomeUsuario').innerText = 'Erro ao buscar usuário';
     });
   };
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = 'index.html';
+  }
 </script>
 
 </body>

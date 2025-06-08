@@ -4,156 +4,96 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lista de Desejos - MyBook</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css" rel="stylesheet" />
   <style>
     body {
       background-color: #000;
       margin: 0;
       min-height: 100vh;
       font-family: sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
+      display: flex; justify-content: center; align-items: center;
+      overflow: hidden; position: relative;
     }
-
-    .background-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 0;
-    }
-
+    .background-container { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; justify-content:center; align-items:center; z-index:0 }
     .background-image {
       background: url('IMG/mybook.png') no-repeat center center;
-      background-size: cover;
-      width: 100%;
-      height: 100%;
-      filter: brightness(0.4) blur(1px);
-      border-radius: 80px;
-      max-width: 500px;
-      min-height: 90vh;
-      box-shadow: 0 0 30px rgba(255,255,255,0.1);
+      background-size: cover; width:100%; height:100%;
+      filter:brightness(0.4) blur(1px);
+      border-radius:80px; max-width:500px; min-height:90vh;
+      box-shadow:0 0 30px rgba(255,255,255,0.1);
     }
-
-    .popup-overlay {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 500px;
-      min-height: 90vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 80px;
-      overflow: hidden;
-      padding: 0 20px;
-    }
-
+    .popup-overlay { position:relative; z-index:1; width:100%; max-width:500px; min-height:90vh; display:flex; justify-content:center; align-items:center; border-radius:80px; overflow:hidden; padding:0 20px }
     .popup-content {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 30px 20px;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
+      background:rgba(255,255,255,0.95);
+      padding:30px 20px; border-radius:16px;
+      width:90%; max-width:400px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.5);
+      text-align:center; display:flex; flex-direction:column; align-items:center;
+      position:relative;
     }
-
     .voltar {
-      position: absolute;
-      top: 10px;
-      left: 20px;
-      font-size: 14px;
-      font-weight: bold;
-      color: red;
-      text-decoration: underline;
-      cursor: pointer;
+      position:absolute; top:10px; left:20px;
+      font-size:14px; font-weight:bold; color:red;
+      text-decoration:underline; cursor:pointer;
     }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 14px;
+    input, select {
+      width:100%; padding:10px; margin-bottom:12px;
+      border-radius:8px; border:1px solid #ccc; font-size:14px;
     }
-
     button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px;
-      font-weight: bold;
-      border-radius: 8px;
-      border: none;
-      width: 100%;
-      margin-top: 10px;
-      cursor: pointer;
-      transition: background-color 0.3s;
+      background-color:#4CAF50; color:white;
+      padding:10px; font-weight:bold; border:none;
+      border-radius:8px; width:100%; margin-top:10px;
+      cursor:pointer; transition:background-color .3s;
+      font-size:14px;
     }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
+    button:hover { background-color:#45a049 }
     .badge {
+      padding:2px 6px; border-radius:6px; font-size:12px;
+      font-weight:bold; display:inline-block; margin-top:4px;
+    }
+    .alta { background-color:#dc2626; color:white }
+    .media { background-color:#f59e0b; color:white }
+    .baixa { background-color:#16a34a; color:white }
+    
+    .table-container { width:100%; overflow-x:auto; margin-top:20px }
+    table { width:100%; border-collapse:collapse }
+    th, td { padding:8px; border-bottom:1px solid #ccc; text-align:left }
+    th { background:#f3f4f6; font-weight:bold }
+    
+    .btn-excluir {
+      background-color: #e53e3e;
+      color: #fff;
       padding: 2px 6px;
-      border-radius: 6px;
       font-size: 12px;
-      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
       display: inline-block;
-      margin-top: 4px;
     }
-
-    .alta {
-      background-color: #dc2626;
-      color: white;
-    }
-
-    .media {
-      background-color: #f59e0b;
-      color: white;
-    }
-
-    .baixa {
-      background-color: #16a34a;
-      color: white;
+    .btn-excluir:hover {
+      background-color: #c53030;
     }
   </style>
 </head>
 
 <body>
 
-<div class="background-container">
-  <div class="background-image"></div>
-</div>
+  <div class="background-container">
+    <div class="background-image"></div>
+  </div>
 
-<div class="popup-overlay">
-  <div class="popup-content">
+  <div class="popup-overlay">
+    <div class="popup-content">
 
-    <div class="voltar" onclick="voltarMenu()">Voltar</div>
+      <div class="voltar" onclick="voltarMenu()">Voltar</div>
 
-    <h1 class="text-2xl font-bold mb-6 mt-2">📝 Lista de Desejos</h1>
+      <h1 class="text-2xl font-bold mb-6 mt-2">📝 Lista de Desejos</h1>
 
-    <form id="formDesejo" class="w-full text-left">
-      <div>
+      <form id="formDesejo" class="w-full text-left">
         <label class="block font-semibold mb-1">Nome do Livro:</label>
         <input id="livro" type="text" placeholder="Digite o nome do livro" required>
-      </div>
 
-      <div>
         <label class="block font-semibold mb-1">Prioridade:</label>
         <select id="prioridade" required>
           <option value="">Selecione a prioridade</option>
@@ -161,79 +101,99 @@
           <option value="media">Média</option>
           <option value="baixa">Baixa</option>
         </select>
-      </div>
 
-      <button type="submit">Adicionar</button>
-    </form>
+        <button type="submit">Adicionar</button>
+      </form>
 
-    <h2 class="text-xl font-bold mt-6 mb-4">Livros Desejados</h2>
+      
+      <button id="btnDesejos">Livros Desejados</button>
 
-    <div id="listaDesejos" class="w-full space-y-4"></div>
-
+      
+      <div id="tabelaDesejos" class="table-container"></div>
+    </div>
   </div>
-</div>
 
-<script>
-  function voltarMenu() {
-    window.location.href = "menu.html";
-  }
+  <script>
+    function voltarMenu() {
+      location.href = 'menu.html';
+    }
 
-  const form = document.getElementById('formDesejo');
-  const lista = document.getElementById('listaDesejos');
+    
+    document.getElementById('formDesejo').onsubmit = async e => {
+      e.preventDefault();
+      const livro = e.target.livro.value.trim();
+      const prioridade = e.target.prioridade.value;
+      const email = localStorage.getItem('email');
+      if (!livro || !prioridade || !email) {
+        return alert('Preencha todos os campos!');
+      }
+      await fetch('http://localhost:3000/api/desejos', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ email, livro, prioridade })
+      });
+      e.target.reset();
+    };
 
-  function salvarDesejo(desejo) {
-    const desejos = JSON.parse(localStorage.getItem('desejos')) || [];
-    desejos.push(desejo);
-    localStorage.setItem('desejos', JSON.stringify(desejos));
-  }
+    
+    document.getElementById('btnDesejos').onclick = carregarTabelaDesejos;
 
-  function carregarDesejos() {
-    lista.innerHTML = '';
-    const desejos = JSON.parse(localStorage.getItem('desejos')) || [];
+    async function carregarTabelaDesejos() {
+      const email = localStorage.getItem('email');
+      if (!email) return alert('Usuário não logado.');
 
-    desejos.forEach(desejo => {
-      const div = document.createElement('div');
-      div.classList.add('bg-gray-50', 'p-4', 'rounded-lg', 'shadow');
+      const res = await fetch(
+        `http://localhost:3000/api/desejos?email=${encodeURIComponent(email)}`
+      );
+      const desejos = await res.json();
 
-      let prioridadeClasse = '';
-      let prioridadeTexto = '';
-
-      if (desejo.prioridade === 'alta') {
-        prioridadeClasse = 'alta';
-        prioridadeTexto = 'Alta';
-      } else if (desejo.prioridade === 'media') {
-        prioridadeClasse = 'media';
-        prioridadeTexto = 'Média';
-      } else {
-        prioridadeClasse = 'baixa';
-        prioridadeTexto = 'Baixa';
+      const div = document.getElementById('tabelaDesejos');
+      if (!desejos.length) {
+        div.innerHTML = '<p>Nenhum livro desejado.</p>';
+        return;
       }
 
-      div.innerHTML = `
-        <p class="text-lg font-semibold">${desejo.livro}</p>
-        <span class="badge ${prioridadeClasse}">Prioridade: ${prioridadeTexto}</span>
-      `;
-      lista.appendChild(div);
-    });
-  }
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const livro = document.getElementById('livro').value.trim();
-    const prioridade = document.getElementById('prioridade').value;
-
-    if (livro && prioridade) {
-      const novoDesejo = { livro, prioridade };
-      salvarDesejo(novoDesejo);
-      form.reset();
-      carregarDesejos();
-    } else {
-      alert('Preencha todos os campos!');
+      let html = `<table>
+        <thead>
+          <tr>
+            <th>Livro</th>
+            <th>Prioridade</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>`;
+      desejos.forEach(d => {
+        const cls = d.prioridade==='alta'
+          ? 'alta'
+          : d.prioridade==='media'
+            ? 'media'
+            : 'baixa';
+        html += `<tr>
+          <td>${d.livro}</td>
+          <td><span class="badge ${cls}">
+            ${d.prioridade.charAt(0).toUpperCase()+d.prioridade.slice(1)}
+          </span></td>
+          <td>
+            <button class="btn-excluir"
+                    onclick="excluirDesejo(${d.id})">
+              Excluir
+            </button>
+          </td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      div.innerHTML = html;
     }
-  });
 
-  window.onload = carregarDesejos;
-</script>
+    
+    async function excluirDesejo(id) {
+      if (!confirm('Deseja realmente excluir este desejo?')) return;
+      await fetch(`http://localhost:3000/api/desejos/${id}`, {
+        method: 'DELETE'
+      });
+      carregarTabelaDesejos();
+    }
+  </script>
 
 </body>
 </html>

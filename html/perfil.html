@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Perfil - MyBook</title>
-
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.1/dist/tailwind.min.css" rel="stylesheet">
-
   <style>
     body {
       background-color: #000;
@@ -19,24 +17,16 @@
       overflow: hidden;
       position: relative;
     }
-
     .background-container {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; justify-content: center; align-items: center;
       z-index: 0;
     }
-
     .background-image {
       background: url('IMG/mybook.png') no-repeat center center;
       background-size: cover;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       filter: brightness(0.4) blur(1px);
       border-radius: 80px;
       max-width: 500px;
@@ -44,32 +34,21 @@
       overflow: hidden;
       box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
     }
-
     .popup-overlay {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 500px;
-      min-height: 90vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 80px;
-      overflow: hidden;
-      padding: 0 20px;
+      position: relative; z-index: 1;
+      width: 100%; max-width: 500px; min-height: 90vh;
+      display: flex; justify-content: center; align-items: center;
+      border-radius: 80px; overflow: hidden; padding: 0 20px;
     }
-
     .popup-content {
       background: rgba(255, 255, 255, 0.95);
       padding: 30px 20px 20px 20px;
       border-radius: 16px;
-      width: 100%;
-      max-width: 400px;
+      width: 100%; max-width: 400px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       text-align: center;
-      position: relative; /* necessário para posicionar o botão voltar */
+      position: relative;
     }
-
     .photo-container {
       width: 100px;
       height: 100px;
@@ -79,14 +58,12 @@
       margin: 8px auto;
       box-shadow: 0 0 8px rgba(0,0,0,0.5);
     }
-
     .photo-container img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
-
     .upload-label {
       cursor: pointer;
       text-decoration: underline;
@@ -94,7 +71,6 @@
       font-size: 14px;
       margin-bottom: 16px;
     }
-
     .form-input {
       width: 100%;
       padding: 10px;
@@ -104,7 +80,6 @@
       font-size: 14px;
       box-sizing: border-box;
     }
-
     .btn {
       background-color: #4CAF50;
       color: white;
@@ -119,24 +94,18 @@
       transition: background-color 0.3s;
       box-sizing: border-box;
     }
-
     .btn:hover {
       background-color: #45a049;
     }
-
     .btn-cancelar {
       background-color: #aaa;
     }
-
     .btn-cancelar:hover {
       background-color: #888;
     }
-
     #photoUpload {
       display: none;
     }
-
-    
     .botao-voltar {
       position: absolute;
       top: 10px;
@@ -148,13 +117,11 @@
       cursor: pointer;
       transition: color 0.3s;
     }
-
     .botao-voltar:hover {
       color: #b91c1c;
     }
   </style>
 </head>
-
 <body>
 
 <div class="background-container">
@@ -187,11 +154,17 @@
 </div>
 
 <script>
+  let fotoBase64 = '';
+
   function previewPhoto(event) {
     const file = event.target.files[0];
     if (file) {
-      const photoPreview = document.getElementById('photoPreview');
-      photoPreview.src = URL.createObjectURL(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        fotoBase64 = reader.result;
+        document.getElementById('photoPreview').src = fotoBase64;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -201,7 +174,6 @@
 
   window.onload = function() {
     const emailLogado = localStorage.getItem('email');
-
     if (!emailLogado) {
       window.location.href = "./index.html";
       return;
@@ -209,28 +181,56 @@
 
     document.getElementById('email').value = emailLogado;
 
-    fetch('/api/buscar-usuario', {
+    fetch('http://localhost:3000/api/buscar-usuario', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: emailLogado })
     })
     .then(response => response.json())
     .then(data => {
-      if (data.nome) {
-        document.getElementById('nome').value = data.nome;
-      }
-      if (data.cpf) {
-        document.getElementById('cpf').value = data.cpf;
-      }
-      if (data.dataNascimento) {
-        document.getElementById('nascimento').value = data.dataNascimento.substring(0,10);
-      }
+      if (data.nome) document.getElementById('nome').value = data.nome;
+      if (data.cpf) document.getElementById('cpf').value = data.cpf;
+      if (data.dataNascimento) document.getElementById('nascimento').value = data.dataNascimento.substring(0,10);
       if (data.fotoPerfil) {
         document.getElementById('photoPreview').src = data.fotoPerfil;
+        fotoBase64 = data.fotoPerfil;
       }
     })
     .catch(error => {
       console.error('Erro ao carregar dados do perfil:', error);
+    });
+
+    document.getElementById('perfilForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('nome').value;
+      const nascimento = document.getElementById('nascimento').value;
+      const cpf = document.getElementById('cpf').value;
+      const email = document.getElementById('email').value;
+
+      fetch('http://localhost:3000/api/usuario', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          nome,
+          cpf,
+          dataNascimento: nascimento,
+          fotoPerfil: fotoBase64
+        })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Erro na resposta do servidor");
+        return response.json();
+      })
+      .then(data => {
+        alert(data.mensagem || 'Perfil atualizado com sucesso!');
+        fecharPerfil();
+      })
+      .catch(error => {
+        console.error('Erro ao atualizar perfil:', error);
+        alert('Erro ao atualizar perfil.');
+      });
     });
   };
 </script>
